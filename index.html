@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+    <button onClick=loadDoc() id="btn">Show Countries</button>
+    <div id="demo"></div>
+
+
+
+    <script>
+        const myButton = document.getElementById("btn");
+        myButton.addEventListener("click", () => myButton.style.display = "none")
+
+        //let url = "https://reqres.in/api/users?page=2"
+        let url = "https://restcountries.com/v3.1/all"
+
+        /*
+        readyState	Holds the status of the XMLHttpRequest.
+        0: request not initialized
+        1: server connection established
+        2: request received
+        3: processing request
+        4: request finished and response is ready
+
+        status
+            200: "OK"
+            403: "Forbidden"
+            404: "Page not found"
+        
+        */
+
+        function createElement(element) {
+            return document.createElement(element);
+        }
+
+        function insertData(element, data) {
+            element.innerHTML = data;
+        }
+
+        function loadDoc() {
+            var xhttp = new XMLHttpRequest();
+            xhttp.open("GET", "https://reqres.in/api/users?page=2", true);
+            xhttp.send();
+            xhttp.onreadystatechange = function () { // function to be called when the readyState property changes
+                if (this.readyState == 4 && this.status == 200) { // 
+
+                    let userDetails = JSON.parse(this.response);
+                    console.log(userDetails)
+                    userDetails.data.forEach(user => {
+                        // Create div>p element
+                        let root = createElement("div")
+                        root.setAttribute("id", "myElement")
+                        let userName = createElement("p")
+                        let email = createElement("p");
+                        let avtar = createElement("img");
+
+                        //Render the response content into the created HTML elements.
+                        insertData(userName, user.first_name);
+                        insertData(email, user.email);
+                        avtar.src = user.avatar;
+
+                        // Attach the paragraph elements to div tag
+                        root.appendChild(avtar);
+                        root.appendChild(userName);
+                        root.appendChild(email);
+
+
+                        // Attach the div to the Main div element created at the beginning.
+                        document.getElementById("demo").appendChild(root);
+                    });
+                }
+            };
+        }
+
+
+        function getData() {
+            let xhr = new XMLHttpRequest()
+
+            xhr.open('GET', url, true) // Type of req, ENDPOINT, isAsync?
+            xhr.send();
+            xhr.onload = function () {
+                console.log("xhr status is: " + xhr.status);
+                if (xhr.status === 200) {
+                    console.log("success......")
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>
